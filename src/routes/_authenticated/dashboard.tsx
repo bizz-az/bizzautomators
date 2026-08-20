@@ -58,6 +58,27 @@ function Dashboard() {
     refetchInterval: 30000,
   });
 
+  const { data: todayExpenses = 0 } = useQuery({
+    queryKey: ["today-expenses"],
+    queryFn: async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      const { data } = await supabase
+        .from("expenses")
+        .select("amount")
+        .eq("expense_date", today);
+      return (data ?? []).reduce((s: number, r: any) => s + Number(r.amount ?? 0), 0);
+    },
+    refetchInterval: 30000,
+  });
+
+  const { data: customerCount = 0 } = useQuery({
+    queryKey: ["customer-count-dash"],
+    queryFn: async () => {
+      const { count } = await supabase.from("customers").select("*", { count: "exact", head: true });
+      return count ?? 0;
+    },
+  });
+
   const tabs = [
     { label: "SALES", to: "/m/sales" },
     { label: "INVENTORY", to: "/m/inventory" },
@@ -68,7 +89,7 @@ function Dashboard() {
   const stats = [
     { label: "Stock", value: `${lowStock} low`, icon: Package },
     { label: "Sales", value: String(recentSalesCount), icon: ShoppingCart },
-    { label: "Expenses", value: "—", icon: BarChart3 },
+    { label: "Expenses", value: `TZS ${formatTZS(Number(todayExpenses))}`, icon: BarChart3 },
   ];
 
   const quickActions = [
@@ -184,6 +205,8 @@ function Dashboard() {
             {[
               { label: "Sales completed", value: String(recentSalesCount), icon: ShoppingCart },
               { label: "Low stock alerts", value: String(lowStock), icon: Package },
+              { label: "Expenses today", value: `TZS ${formatTZS(Number(todayExpenses))}`, icon: BarChart3 },
+              { label: "Customers", value: String(customerCount), icon: Users },
             ].map((a, i) => (
               <div
                 key={a.label}
