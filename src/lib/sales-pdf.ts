@@ -18,8 +18,8 @@ export type PdfDocument = {
   date: string;
   secondaryLabel?: string;
   secondaryValue?: string;
-  business: { name: string; address?: string; phone?: string; email?: string };
-  customer: { name: string; phone?: string; email?: string; address?: string };
+  business: { name: string; address?: string; phone?: string };
+  customer: { name: string; phone?: string; address?: string };
   lines: PdfLine[];
   subtotal: number;
   taxAmount: number;
@@ -52,7 +52,7 @@ export function buildSalesDocumentPdf(data: PdfDocument, fileName: string) {
   doc.text(data.business.name || "Business", MARGIN, 52);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  const bizLines = [data.business.address, data.business.phone, data.business.email].filter(Boolean) as string[];
+  const bizLines = [data.business.address, data.business.phone].filter(Boolean) as string[];
   bizLines.forEach((line, index) => doc.text(line, MARGIN, 70 + index * 12));
 
   doc.setFont("helvetica", "bold");
@@ -80,7 +80,7 @@ export function buildSalesDocumentPdf(data: PdfDocument, fileName: string) {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(90, 90, 100);
-  const custLines = [data.customer.phone, data.customer.email, data.customer.address].filter(Boolean) as string[];
+  const custLines = [data.customer.phone, data.customer.address].filter(Boolean) as string[];
   custLines.forEach((line, index) => doc.text(line, MARGIN, y + 32 + index * 12));
 
   y = y + 44 + custLines.length * 12;

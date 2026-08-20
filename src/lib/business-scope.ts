@@ -36,6 +36,8 @@ export type BusinessCharacteristics = {
   taxRegistrations: string[];
   doesImport: boolean;
   doesExport: boolean;
+  /** Optional operational flags (sells_products, accepts_credit, ...). */
+  flags?: Record<string, boolean>;
   /**
    * True when the business has never recorded any scope configuration.
    * Legacy businesses keep the full application (backward compatible).
@@ -52,6 +54,7 @@ export const EMPTY_CHARACTERISTICS: BusinessCharacteristics = {
   taxRegistrations: [],
   doesImport: false,
   doesExport: false,
+  flags: {},
   unconfigured: true,
 };
 
@@ -97,6 +100,10 @@ const hasRegistration = (c: BusinessCharacteristics, code: string) =>
 
 const employees = (c: BusinessCharacteristics) =>
   (c.employeeCount ?? 0) > 0;
+
+/** Reads an operational flag, falling back to a default when unset. */
+const flag = (c: BusinessCharacteristics, key: string, fallback: boolean) =>
+  c.flags?.[key] ?? fallback;
 
 /**
  * One central rule table. Adding a future characteristic or capability means

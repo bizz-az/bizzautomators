@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/m/crm/campaigns")({
   component: CampaignsPage,
 });
 
-const CHANNELS = ["sms", "email", "social", "whatsapp", "instagram", "facebook", "tiktok", "google", "website", "referral", "offline"] as const;
+const CHANNELS = ["sms", "social", "whatsapp", "instagram", "facebook", "tiktok", "google", "website", "referral", "offline"] as const;
 const STATUSES = ["draft", "active", "paused", "completed"] as const;
 const TABS = [
   { key: "campaigns", label: "Campaigns", icon: Megaphone },

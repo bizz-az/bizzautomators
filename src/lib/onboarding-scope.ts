@@ -2,7 +2,7 @@
  * Signup scope handoff.
  *
  * The business scope answered during "Create account" cannot always be written
- * to `business_settings` immediately (with email confirmation on, sign-up does
+ * to `business_settings` immediately (sign-up may not
  * not produce a session). So it is parked locally and flushed by the
  * BusinessScopeProvider the first time the new account loads the app.
  *
@@ -15,7 +15,7 @@ import { EMPTY_CHARACTERISTICS, type BusinessCharacteristics, type PlanKey } fro
 export const PENDING_SCOPE_KEY = "bizz.scope.pending";
 
 export type PendingScope = {
-  email: string;
+  phone: string;
   characteristics: BusinessCharacteristics;
   plan: PlanKey;
 };
@@ -33,7 +33,7 @@ export function readPendingScope(): PendingScope | null {
     const parsed = JSON.parse(raw) as PendingScope;
     if (!parsed?.characteristics) return null;
     return {
-      email: String(parsed.email ?? ""),
+      phone: String(parsed.phone ?? ""),
       plan: (parsed.plan ?? "full") as PlanKey,
       characteristics: { ...EMPTY_CHARACTERISTICS, ...parsed.characteristics, unconfigured: false },
     };

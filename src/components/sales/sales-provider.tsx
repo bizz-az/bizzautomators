@@ -18,7 +18,6 @@ export type SalesCustomer = {
   id: string;
   name: string;
   phone: string;
-  email: string;
   address: string;
 };
 
@@ -160,7 +159,7 @@ const mapProduct = (r: any): SalesProduct => ({
 });
 
 const mapCustomer = (r: any): SalesCustomer => ({
-  id: r.id, name: str(r.name), phone: str(r.phone), email: str(r.email), address: str(r.address ?? r.location),
+  id: r.id, name: str(r.name), phone: str(r.phone), address: str(r.address ?? r.location),
 });
 
 const mapSale = (r: any): SaleRecord => ({

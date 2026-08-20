@@ -71,7 +71,7 @@ function QuotationsPage() {
         secondaryLabel: "Valid until",
         secondaryValue: row.validUntil || "—",
         business,
-        customer: { name: row.customerName, phone: customer?.phone, email: customer?.email, address: customer?.address },
+        customer: { name: row.customerName, phone: customer?.phone, address: customer?.address },
         lines: itemsOf(row.id).map((item) => {
           const product = products.find((p) => p.id === item.productId);
           return { name: item.productName, spec: product ? productSpec(product) : "", quantity: item.quantity, unitPrice: item.unitPrice, lineTotal: item.lineTotal };

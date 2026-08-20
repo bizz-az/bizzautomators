@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, useParams } from "@tanstack/react-router"
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Edit2, Trash2, ShoppingBag, Phone, Mail, MapPin } from "lucide-react";
+import { Edit2, Trash2, ShoppingBag, Phone, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { CrmShell, GlassCard } from "@/components/crm/crm-shell";
 import { TopDrawer, Field, inputCls } from "@/components/crm/top-drawer";
@@ -31,12 +31,11 @@ function ProfilePage() {
   const totalPurchases = sales.filter((s: any) => s.status === "completed").reduce((a, s: any) => a + Number(s.total || 0), 0);
   const lastPurchase = sales[0]?.created_at;
 
-  const [form, setForm] = useState({ name: "", phone: "", email: "", location: "", customer_type: "retail", status: "active" });
+  const [form, setForm] = useState({ name: "", phone: "", location: "", customer_type: "retail", status: "active" });
   useEffect(() => {
     if (customer) setForm({
       name: customer.name ?? "",
       phone: customer.phone ?? "",
-      email: customer.email ?? "",
       location: (customer as any).location ?? "",
       customer_type: (customer as any).customer_type ?? "retail",
       status: (customer as any).status ?? "active",
@@ -48,7 +47,6 @@ function ProfilePage() {
       const { error } = await supabase.from("customers").update({
         name: form.name.trim(),
         phone: form.phone || null,
-        email: form.email || null,
         location: form.location || null,
         customer_type: form.customer_type,
         status: form.status,
@@ -99,7 +97,6 @@ function ProfilePage() {
           <h3 className="font-display text-lg font-bold">Details</h3>
           <div className="mt-3 grid gap-3 text-sm">
             {customer?.phone && <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-amber-400" /> {customer.phone}</div>}
-            {customer?.email && <div className="flex items-center gap-2"><Mail className="h-4 w-4 text-amber-400" /> {customer.email}</div>}
             {(customer as any)?.location && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-amber-400" /> {(customer as any).location}</div>}
             {customer?.address && <div className="text-white/70">{customer.address}</div>}
           </div>
@@ -150,7 +147,6 @@ function ProfilePage() {
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Name"><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} /></Field>
           <Field label="Phone"><input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputCls} /></Field>
-          <Field label="Email"><input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputCls} /></Field>
           <Field label="Location"><input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className={inputCls} /></Field>
           <Field label="Type">
             <select value={form.customer_type} onChange={(e) => setForm({ ...form, customer_type: e.target.value })} className={inputCls}>

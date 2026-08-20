@@ -49,7 +49,7 @@ function NewSalePage() {
         number: invoiceNumber,
         date: saleDate,
         business,
-        customer: { name: customerName, phone: customer?.phone, email: customer?.email, address: customer?.address },
+        customer: { name: customerName, phone: customer?.phone, address: customer?.address },
         lines: items.map((item) => {
           const product = products.find((row) => row.id === item.productId);
           return {

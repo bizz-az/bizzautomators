@@ -163,7 +163,7 @@ export function BusinessScopeProvider({ children }: { children: ReactNode }) {
             setting_value: JSON.stringify(pending.characteristics),
             description: "Business characteristics used by the capability/scope engine",
           },
-          { onConflict: "setting_key" },
+          { onConflict: "user_id,setting_key" },
         );
         if (characteristicsError) throw new Error(characteristicsError.message);
 
@@ -174,7 +174,7 @@ export function BusinessScopeProvider({ children }: { children: ReactNode }) {
               setting_value: pending.plan,
               description: "Subscription plan (entitlement layer)",
             },
-            { onConflict: "setting_key" },
+            { onConflict: "user_id,setting_key" },
           );
           if (planError) throw new Error(planError.message);
         }
@@ -240,7 +240,7 @@ export function BusinessScopeProvider({ children }: { children: ReactNode }) {
           setting_value: JSON.stringify(next),
           description: "Business characteristics used by the capability/scope engine",
         },
-        { onConflict: "setting_key" },
+        { onConflict: "user_id,setting_key" },
       );
       if (error) throw new Error(error.message);
     },
@@ -255,7 +255,7 @@ export function BusinessScopeProvider({ children }: { children: ReactNode }) {
         setting_value: next,
         description: "Subscription plan (entitlement layer)",
       },
-      { onConflict: "setting_key" },
+      { onConflict: "user_id,setting_key" },
     );
     if (error) throw new Error(error.message);
   }, []);

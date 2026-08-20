@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 /** Business identity used on printed sales documents. */
 export function useBusinessProfile() {
-  const [profile, setProfile] = useState({ name: "Bizz", address: "", phone: "", email: "" });
+  const [profile, setProfile] = useState({ name: "Bizz", address: "", phone: "" });
 
   useEffect(() => {
     void (async () => {

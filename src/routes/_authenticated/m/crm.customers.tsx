@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router"
 import { useState, useMemo, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, Plus, UserPlus, ChevronRight, Phone, Mail, LayoutList, LayoutGrid, Users } from "lucide-react";
+import { Search, Plus, UserPlus, ChevronRight, Phone, LayoutList, LayoutGrid, Users } from "lucide-react";
 import { toast } from "sonner";
 import { CrmShell } from "@/components/crm/crm-shell";
 import { TopDrawer, Field, inputCls } from "@/components/crm/top-drawer";
@@ -48,7 +48,7 @@ function CustomersPage() {
     if (q) {
       const s = q.toLowerCase();
       list = list.filter((c: any) =>
-        [c.name, c.phone, c.email, c.location].some((v) => (v ?? "").toString().toLowerCase().includes(s)),
+        [c.name, c.phone, c.location].some((v) => (v ?? "").toString().toLowerCase().includes(s)),
       );
     }
     if (typeFilter !== "all") list = list.filter((c: any) => c.customer_type === typeFilter);
@@ -58,7 +58,7 @@ function CustomersPage() {
   }, [customers, q, typeFilter, statusFilter, sort]);
 
   const [form, setForm] = useState({
-    name: "", phone: "", email: "", location: "", customer_type: "retail", status: "active",
+    name: "", phone: "", location: "", customer_type: "retail", status: "active",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -66,13 +66,11 @@ function CustomersPage() {
     mutationFn: async () => {
       const errs: Record<string, string> = {};
       if (!form.name.trim()) errs.name = "Name is required";
-      if (form.email && !/^\S+@\S+\.\S+$/.test(form.email)) errs.email = "Invalid email";
       setErrors(errs);
       if (Object.keys(errs).length) throw new Error("validation");
       const { data, error } = await supabase.from("customers").insert({
         name: form.name.trim(),
         phone: form.phone.trim() || null,
-        email: form.email.trim() || null,
         location: form.location.trim() || null,
         customer_type: form.customer_type,
         status: form.status,
@@ -86,7 +84,7 @@ function CustomersPage() {
       qc.invalidateQueries({ queryKey: ["crm-customers-all"] });
       qc.invalidateQueries({ queryKey: ["crm-hub-stats"] });
       setDrawerOpen(false);
-      setForm({ name: "", phone: "", email: "", location: "", customer_type: "retail", status: "active" });
+      setForm({ name: "", phone: "", location: "", customer_type: "retail", status: "active" });
       navigate({ to: "/m/crm/customers", search: {} });
     },
     onError: (e: any) => e?.message !== "validation" && toast.error(e?.message ?? "Failed"),
@@ -114,7 +112,7 @@ function CustomersPage() {
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search by name, phone, email, location..."
+                placeholder="Search by name, phone, location..."
                 className={`${controlCls} pl-11`}
               />
             </div>
@@ -187,7 +185,6 @@ function CustomersPage() {
                     </div>
                     <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-white/50">
                       {c.phone && <span className="inline-flex items-center gap-1"><Phone className="h-3 w-3" />{c.phone}</span>}
-                      {c.email && <span className="inline-flex items-center gap-1"><Mail className="h-3 w-3" />{c.email}</span>}
                       {c.location && <span>{c.location}</span>}
                     </div>
                   </div>
@@ -222,9 +219,6 @@ function CustomersPage() {
           </Field>
           <Field label="Phone">
             <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputCls} placeholder="+255 ..." />
-          </Field>
-          <Field label="Email" error={errors.email}>
-            <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputCls} placeholder="Email" />
           </Field>
           <Field label="Location">
             <input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className={inputCls} placeholder="Dar es Salaam" />

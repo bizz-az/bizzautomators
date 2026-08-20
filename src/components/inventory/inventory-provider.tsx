@@ -30,7 +30,6 @@ export type SupplierRecord = {
   id: string;
   name: string;
   phone: string;
-  email: string;
   address: string;
   notes: string;
   status: "Active" | "Inactive";
@@ -174,11 +173,11 @@ const mapCategory = (r: any): CategoryRecord => ({ id: r.id, name: str(r.name), 
 const categoryRow = (r: Omit<CategoryRecord, "id">) => ({ name: r.name, description: r.description || null });
 
 const mapSupplier = (r: any): SupplierRecord => ({
-  id: r.id, name: str(r.name), phone: str(r.phone), email: str(r.email),
+  id: r.id, name: str(r.name), phone: str(r.phone),
   address: str(r.address), notes: str(r.notes), status: (r.status ?? "Active") as SupplierRecord["status"],
 });
 const supplierRow = (r: Omit<SupplierRecord, "id">) => ({
-  name: r.name, phone: r.phone || null, email: r.email || null,
+  name: r.name, phone: r.phone || null,
   address: r.address || null, notes: r.notes || null, status: r.status,
 });
 
