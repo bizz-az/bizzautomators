@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router"
 import { useState, useMemo, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, Plus, UserPlus, ChevronRight, Phone, Mail, LayoutList, LayoutGrid, Users } from "lucide-react";
+import { Search, Plus, UserPlus, ChevronRight, Phone, LayoutList, LayoutGrid, Users } from "lucide-react";
 import { toast } from "sonner";
 import { CrmShell } from "@/components/crm/crm-shell";
 import { TopDrawer, Field, inputCls } from "@/components/crm/top-drawer";

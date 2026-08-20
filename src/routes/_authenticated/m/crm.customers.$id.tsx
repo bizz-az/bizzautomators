@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, useParams } from "@tanstack/react-router"
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Edit2, Trash2, ShoppingBag, Phone, Mail, MapPin } from "lucide-react";
+import { Edit2, Trash2, ShoppingBag, Phone, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { CrmShell, GlassCard } from "@/components/crm/crm-shell";
 import { TopDrawer, Field, inputCls } from "@/components/crm/top-drawer";
