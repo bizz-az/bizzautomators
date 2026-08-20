@@ -385,7 +385,7 @@ export async function logAccessChange(input: {
     previous_value: input.previousValue ?? null,
     new_value: input.newValue ?? null,
     actor_id: data?.user?.id ?? null,
-    actor_label: input.actorLabel ?? data?.user?.email ?? null,
+    actor_label: input.actorLabel ?? (data?.user?.user_metadata as any)?.phone ?? null,
     status: "success",
   });
 }

@@ -10,7 +10,6 @@ export type HrEmployee = {
   code: string;
   name: string;
   photoUrl?: string;
-  email?: string;
   phone?: string;
   departmentId: string | null;
   position: string;
@@ -70,7 +69,6 @@ export type HrApplicant = {
   id: string;
   vacancyId: string | null;
   name: string;
-  email?: string;
   phone?: string;
   appliedOn: string;
   status: ApplicantStatus;
@@ -188,7 +186,6 @@ function seed(): HrState {
     basicSalary: basic,
     allowances: allow,
     deductions: ded,
-    email: `${name.split(" ")[0].toLowerCase()}@bizz.co.tz`,
     phone: "+255 7xx xxx xxx",
   }));
 
@@ -214,7 +211,7 @@ function seed(): HrState {
 
   const vacancy: HrVacancy = { id: uid(), position: "Accountant", departmentId: finance.id, employmentType: "full_time", openings: 1, status: "open", postedOn: day };
   const applicants: HrApplicant[] = [
-    { id: uid(), vacancyId: vacancy.id, name: "Grace Mollel", appliedOn: day, status: "interview", email: "grace@example.com" },
+    { id: uid(), vacancyId: vacancy.id, name: "Grace Mollel", appliedOn: day, status: "interview" },
     { id: uid(), vacancyId: vacancy.id, name: "Salim Ally", appliedOn: day, status: "pending" },
   ];
 

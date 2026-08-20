@@ -243,7 +243,7 @@ function UsersPage() {
     try {
       const [{ data: profiles, error: profileError }, { data: userRoles }, customAssignments, roleDefs, catalogRows] =
         await Promise.all([
-          client.from("profiles").select("id,full_name,email,status,last_seen_at,created_at"),
+          client.from("profiles").select("id,full_name,phone,status,last_seen_at,created_at"),
           client.from("user_roles").select("user_id,role"),
           fetchAllCustomRoleAssignments(),
           fetchRoles(),
@@ -391,7 +391,7 @@ function UsersPage() {
       ) : null}
       <TaxTable
         rows={rows}
-        searchKeys={(row) => `${row.full_name} ${row.email} ${row.status} ${row.roles}`}
+        searchKeys={(row) => `${row.full_name} ${row.phone} ${row.status} ${row.roles}`}
         filter={{
           label: "Status",
           options: [
@@ -409,9 +409,9 @@ function UsersPage() {
             ),
           },
           {
-            key: "email",
-            label: "Email",
-            render: (row) => <span className="text-white/70">{row.email || "—"}</span>,
+            key: "phone",
+            label: "Phone",
+            render: (row) => <span className="text-white/70">{row.phone || "—"}</span>,
           },
           { key: "roles", label: "Role", render: (row) => <StatusBadge value={row.roles} /> },
           {
@@ -465,11 +465,11 @@ function UsersPage() {
       <DetailsDrawer
         open={Boolean(selected)}
         onClose={() => setSelected(null)}
-        title={selected?.full_name || selected?.email || "User details"}
+        title={selected?.full_name || selected?.phone || "User details"}
         description="Profile, assigned roles and effective access with the source of each permission."
         icon={Users}
         rows={[
-          { label: "Email", value: selected?.email || "Not provided" },
+          { label: "Phone", value: selected?.email || "Not provided" },
           { label: "Status", value: selected?.status || "active" },
           {
             label: "Last seen",
@@ -522,7 +522,7 @@ function UsersPage() {
         open={Boolean(roleEditing)}
         onClose={() => setRoleEditing(null)}
         title="Assign roles"
-        description={`Choose the roles that apply to ${roleEditing?.full_name || roleEditing?.email || "this user"}.`}
+        description={`Choose the roles that apply to ${roleEditing?.full_name || roleEditing?.phone || "this user"}.`}
         icon={Shield}
         footer={
           <>
@@ -607,7 +607,7 @@ function UsersPage() {
         open={Boolean(accessEditing)}
         onClose={() => setAccessEditing(null)}
         title="Customize permissions"
-        description={`Grant or revoke individual capabilities for ${accessEditing?.full_name || accessEditing?.email || "this user"}. Role permissions are only defaults.`}
+        description={`Grant or revoke individual capabilities for ${accessEditing?.full_name || accessEditing?.phone || "this user"}. Role permissions are only defaults.`}
         icon={Key}
         size="2xl"
         footer={
