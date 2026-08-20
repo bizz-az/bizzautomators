@@ -56,8 +56,8 @@ function ProfilePage() {
           { label: "Legal form", value: profile.legalForm || "Not set" },
           { label: "Sector", value: profile.sector || "Not set" },
           { label: "Employees", value: profile.employeeCount === null ? "Not set" : String(profile.employeeCount) },
-          { label: "Import / export", value: `${profile.doesImport ? "Import" : "—"} / ${profile.doesExport ? "Export" : "—"}` },
-          { label: "Tax registrations", value: profile.taxRegistrations.length ? profile.taxRegistrations.join(", ") : "None recorded" },
+          { label: "Import / export", value: `${profile.doesImport ? "Import" : "No import"} / ${profile.doesExport ? "Export" : "No export"}` },
+          { label: "Tax registrations", value: profile.taxRegistrations.length ? profile.taxRegistrations.join(", ") : "None" },
           { label: "Applicable obligations", value: String(metrics.applicable) },
         ]}
       />
@@ -65,8 +65,8 @@ function ProfilePage() {
       {incomplete ? (
         <section className="rounded-3xl border border-amber-300/30 bg-amber-400/10 p-4">
           <p className="text-sm text-amber-100">
-            Baadhi ya taarifa za usajili wa biashara hazijakamilika. Kamilisha profile ili mfumo uonyeshe
-            matakwa yanayohusu biashara yako pekee.
+            Some of your business registration details are missing. Complete the profile so the system
+            shows only the requirements that apply to your business.
           </p>
           <Button size="sm" className="mt-3 h-9 bg-amber-400 text-black hover:bg-amber-300" onClick={() => setOpen(true)}>
             Complete profile
@@ -90,7 +90,7 @@ function ProfilePage() {
           ))}
           {relevant.length === 0 ? (
             <li className="py-3 text-sm text-white/50">
-              Hakuna matakwa yanayohusu biashara yako kwa taarifa zilizopo.
+              No requirements apply to your business with the details recorded so far.
             </li>
           ) : null}
         </ul>
@@ -106,20 +106,15 @@ function ProfilePage() {
           { name: "businessType", label: "Business type", type: "select", options: ["", ...BUSINESS_TYPES], half: true },
           { name: "legalForm", label: "Legal form", type: "select", options: ["", ...LEGAL_FORMS], half: true },
           { name: "sector", label: "Sector", type: "select", options: ["", ...SECTORS], half: true },
-          { name: "region", label: "Location / region", type: "text", half: true },
-          { name: "sizeCategory", label: "Business size", type: "select", options: SIZE_CATEGORIES, half: true },
-          { name: "annualTurnover", label: "Annual turnover (optional)", type: "number", half: true },
           { name: "employeeCount", label: "Number of employees", type: "number", half: true },
-          { name: "activities", label: "Business activities (comma separated)", type: "text" },
           { name: "taxRegistrations", label: `Tax registrations (${TAX_REGISTRATIONS.join(", ")})`, type: "text" },
           { name: "doesImport", label: "Imports goods", type: "switch", half: true },
           { name: "doesExport", label: "Exports goods", type: "switch", half: true },
         ]}
         initialValue={{
           name: profile.name, businessType: profile.businessType, legalForm: profile.legalForm,
-          sector: profile.sector, region: profile.region, sizeCategory: profile.sizeCategory,
-          annualTurnover: profile.annualTurnover ?? "", employeeCount: profile.employeeCount ?? "",
-          activities: profile.activities.join(", "), taxRegistrations: profile.taxRegistrations.join(", "),
+          sector: profile.sector, employeeCount: profile.employeeCount ?? "",
+          taxRegistrations: profile.taxRegistrations.join(", "),
           doesImport: profile.doesImport, doesExport: profile.doesExport,
         }}
         onClose={() => setOpen(false)}
@@ -130,11 +125,7 @@ function ProfilePage() {
             businessType: String(values["businessType"] ?? ""),
             legalForm: String(values["legalForm"] ?? ""),
             sector: String(values["sector"] ?? ""),
-            region: String(values["region"] ?? ""),
-            sizeCategory: String(values["sizeCategory"] ?? "Not set"),
-            annualTurnover: values["annualTurnover"] === "" ? null : Number(values["annualTurnover"]),
             employeeCount: values["employeeCount"] === "" ? null : Number(values["employeeCount"]),
-            activities: list(values["activities"]),
             taxRegistrations: list(values["taxRegistrations"]),
             doesImport: Boolean(values["doesImport"]),
             doesExport: Boolean(values["doesExport"]),
