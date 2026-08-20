@@ -8,6 +8,7 @@ import desertSunsetBg from "@/assets/desert-sunset-bg.jpg";
 import { BusinessProfileStep } from "@/components/auth/signup-scope-steps";
 import { savePendingScope } from "@/lib/onboarding-scope";
 import { EMPTY_CHARACTERISTICS, type BusinessCharacteristics } from "@/lib/business-scope";
+import { formatPhone, isValidPhone, normalizePhone, phoneIdentity } from "@/lib/phone-auth";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -98,7 +99,7 @@ function AuthDrawer({
 function AuthPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>(null);
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [signupStep, setSignupStep] = useState(1);
@@ -121,8 +122,8 @@ function AuthPage() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (mode === "signup" && signupStep < 2) {
-      if (signupStep === 1 && (!fullName.trim() || !email.trim() || password.length < 6)) {
-        toast.error("Enter your name, a valid email, and a password of at least 6 characters");
+      if (signupStep === 1 && (!fullName.trim() || !isValidPhone(phone) || password.length < 6)) {
+        toast.error("Weka jina lako, namba sahihi ya simu, na nenosiri lenye herufi 6 au zaidi");
         return;
       }
       if (
@@ -143,36 +144,35 @@ function AuthPage() {
     setBusy(true);
     try {
       if (mode === "signup") {
-        savePendingScope({ email, characteristics, plan: "full" });
+        savePendingScope({ phone: normalizePhone(phone), characteristics, plan: "full" });
         const { error } = await supabase.auth.signUp({
-          email,
+          email: phoneIdentity(phone),
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth`,
-            data: { full_name: fullName },
+            data: {
+              full_name: fullName,
+              phone: normalizePhone(phone),
+              business_name: characteristics.name,
+            },
           },
         });
         if (error) throw error;
-        toast.success("Account created. You can sign in now.");
+        toast.success("Akaunti imetengenezwa. Unaweza kuingia sasa.");
         setMode("signin");
         setSignupStep(1);
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (!isValidPhone(phone)) throw new Error("Weka namba sahihi ya simu");
+        const { error } = await supabase.auth.signInWithPassword({
+          email: phoneIdentity(phone),
+          password,
+        });
         if (error) throw error;
-        toast.success("Welcome back");
+        toast.success("Karibu tena");
       }
     } catch (err: any) {
       toast.error(err?.message ?? "Something went wrong");
     } finally {
       setBusy(false);
-    }
-  };
-
-  const google = async () => {
-    try {
-      await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    } catch (err: any) {
-      toast.error(err?.message ?? "Google sign-in failed");
     }
   };
 
@@ -199,18 +199,19 @@ function AuthPage() {
             />
             <input
               className={inputCls}
-              type="email"
+              type="tel"
+              inputMode="tel"
               required
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Namba ya simu (07XX XXX XXX)"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
             <input
               className={inputCls}
               type="password"
               required
               minLength={6}
-              placeholder="Password"
+              placeholder="Nenosiri"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -226,18 +227,19 @@ function AuthPage() {
           <>
             <input
               className={inputCls}
-              type="email"
+              type="tel"
+              inputMode="tel"
               required
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Namba ya simu"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
             <input
               className={inputCls}
               type="password"
               required
               minLength={6}
-              placeholder="Password"
+              placeholder="Nenosiri"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -275,17 +277,6 @@ function AuthPage() {
           </button>
         )}
       </form>
-
-      <div className="my-4 flex items-center gap-3 text-[11px] uppercase tracking-widest text-white/40">
-        <span className="h-px flex-1 bg-white/15" />or<span className="h-px flex-1 bg-white/15" />
-      </div>
-
-      {mode === "signin" && <button
-        onClick={google}
-        className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-semibold transition hover:bg-white/20"
-      >
-        Continue with Google
-      </button>}
 
       <button
         onClick={() => {
