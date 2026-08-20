@@ -2,7 +2,7 @@
  * Signup scope handoff.
  *
  * The business scope answered during "Create account" cannot always be written
- * to `business_settings` immediately (with email confirmation on, sign-up does
+ * to `business_settings` immediately (sign-up may not
  * not produce a session). So it is parked locally and flushed by the
  * BusinessScopeProvider the first time the new account loads the app.
  *

@@ -469,7 +469,7 @@ function UsersPage() {
         description="Profile, assigned roles and effective access with the source of each permission."
         icon={Users}
         rows={[
-          { label: "Phone", value: selected?.email || "Not provided" },
+          { label: "Phone", value: selected?.phone || "Not provided" },
           { label: "Status", value: selected?.status || "active" },
           {
             label: "Last seen",
