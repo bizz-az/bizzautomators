@@ -15,7 +15,7 @@ import { EMPTY_CHARACTERISTICS, type BusinessCharacteristics, type PlanKey } fro
 export const PENDING_SCOPE_KEY = "bizz.scope.pending";
 
 export type PendingScope = {
-  email: string;
+  phone: string;
   characteristics: BusinessCharacteristics;
   plan: PlanKey;
 };
@@ -33,7 +33,7 @@ export function readPendingScope(): PendingScope | null {
     const parsed = JSON.parse(raw) as PendingScope;
     if (!parsed?.characteristics) return null;
     return {
-      email: String(parsed.email ?? ""),
+      phone: String(parsed.phone ?? ""),
       plan: (parsed.plan ?? "full") as PlanKey,
       characteristics: { ...EMPTY_CHARACTERISTICS, ...parsed.characteristics, unconfigured: false },
     };
