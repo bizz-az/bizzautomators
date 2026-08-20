@@ -5,7 +5,7 @@ import { StatusBadge, SummaryStrip, TaxWorkspace } from "@/components/tax/tax-wo
 import { RecordDialog } from "@/components/tax/record-dialog";
 import { useState } from "react";
 import {
-  useCompliance, APPLICABILITY_LABEL, BUSINESS_TYPES, LEGAL_FORMS, SECTORS, SIZE_CATEGORIES, TAX_REGISTRATIONS,
+  useCompliance, APPLICABILITY_LABEL, BUSINESS_TYPES, LEGAL_FORMS, SECTORS, TAX_REGISTRATIONS,
 } from "@/components/compliance/compliance-provider";
 import { Button } from "@/components/ui/button";
 import { useBusinessProfile } from "@/hooks/use-business-profile";
