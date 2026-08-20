@@ -36,6 +36,8 @@ export type BusinessCharacteristics = {
   taxRegistrations: string[];
   doesImport: boolean;
   doesExport: boolean;
+  /** Optional operational flags (sells_products, accepts_credit, ...). */
+  flags?: Record<string, boolean>;
   /**
    * True when the business has never recorded any scope configuration.
    * Legacy businesses keep the full application (backward compatible).
@@ -52,6 +54,7 @@ export const EMPTY_CHARACTERISTICS: BusinessCharacteristics = {
   taxRegistrations: [],
   doesImport: false,
   doesExport: false,
+  flags: {},
   unconfigured: true,
 };
 
