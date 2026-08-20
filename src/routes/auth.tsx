@@ -152,6 +152,13 @@ function AuthPage() {
               full_name: fullName,
               phone: normalizePhone(phone),
               business_name: characteristics.name,
+              business_type: characteristics.businessType,
+              legal_form: characteristics.legalForm,
+              sector: characteristics.sector,
+              employee_count: String(characteristics.employeeCount ?? ""),
+              does_import: characteristics.doesImport,
+              does_export: characteristics.doesExport,
+              tax_registrations: characteristics.taxRegistrations,
             },
           },
         });
