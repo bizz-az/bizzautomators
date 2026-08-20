@@ -26,7 +26,6 @@ function SuppliersPage() {
       {
         name: str(value.name),
         phone: str(value.phone),
-        email: str(value.email),
         address: str(value.address),
         notes: str(value.notes),
         status: str(value.status) as SupplierRecord["status"],
@@ -58,7 +57,7 @@ function SuppliersPage() {
 
       <TaxTable
         rows={suppliers}
-        searchKeys={(row) => `${row.name} ${row.phone} ${row.email}`}
+        searchKeys={(row) => `${row.name} ${row.phone}`}
         filter={{
           label: "Status",
           options: [
@@ -75,7 +74,7 @@ function SuppliersPage() {
         onRowClick={setDetail}
         onEdit={openEdit}
         onDelete={setPendingDelete}
-        onExport={(rows) => exportCsv("suppliers.csv", ["Supplier", "Phone", "Email", "Products", "Status"], rows.map((row) => [row.name, row.phone, row.email, countFor(row), row.status]))}
+        onExport={(rows) => exportCsv("suppliers.csv", ["Supplier", "Phone", "Products", "Status"], rows.map((row) => [row.name, row.phone, countFor(row), row.status]))}
         addLabel="New supplier"
         onAdd={openCreate}
         empty={{ title: "No suppliers yet", description: "Add suppliers to link purchases and products.", icon: Truck }}
@@ -108,7 +107,6 @@ function SuppliersPage() {
           detail
             ? [
                 { label: "Phone", value: detail.phone || "—" },
-                { label: "Email", value: detail.email || "—" },
                 { label: "Address", value: detail.address || "—" },
                 { label: "Products", value: String(countFor(detail)) },
                 { label: "Status", value: <StatusBadge value={detail.status} /> },

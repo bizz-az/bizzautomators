@@ -29,7 +29,7 @@ function InvoicesPage() {
         number: row.invoiceNumber,
         date: row.saleDate,
         business,
-        customer: { name: row.customerName, phone: customer?.phone, email: customer?.email, address: customer?.address },
+        customer: { name: row.customerName, phone: customer?.phone, address: customer?.address },
         lines: saleItems
           .filter((item) => item.saleId === row.id)
           .map((item) => {

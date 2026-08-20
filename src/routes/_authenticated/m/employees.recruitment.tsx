@@ -54,7 +54,6 @@ function RecruitmentPage() {
       {
         vacancyId: vacancies.find((row) => row.position === str(value.vacancy))?.id ?? null,
         name: str(value.name),
-        email: str(value.email) || undefined,
         phone: str(value.phone) || undefined,
         appliedOn: str(value.appliedOn) || today(),
         status: str(value.status) as ApplicantStatus,
@@ -203,7 +202,6 @@ function RecruitmentPage() {
             ? {
                 name: applicantEditing.name,
                 vacancy: positionFor(applicantEditing.vacancyId),
-                email: applicantEditing.email ?? "",
                 phone: applicantEditing.phone ?? "",
                 appliedOn: applicantEditing.appliedOn,
                 status: applicantEditing.status,
@@ -215,7 +213,6 @@ function RecruitmentPage() {
           { name: "vacancy", label: "Vacancy", type: "select", options: vacancies.map((row) => row.position), half: true },
           { name: "status", label: "Status", type: "select", options: ["pending", "interview", "accepted", "rejected"], half: true },
           { name: "appliedOn", label: "Applied on", type: "date", half: true, defaultValue: today() },
-          { name: "email", label: "Email", type: "text", half: true },
           { name: "phone", label: "Phone", type: "text", half: true },
         ]}
         onSubmit={submitApplicant}

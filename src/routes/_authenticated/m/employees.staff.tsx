@@ -37,7 +37,6 @@ function EmployeesPage() {
         code: str(value.code) || `EMP-${String(employees.length + 1).padStart(4, "0")}`,
         name: str(value.name),
         photoUrl: str(value.photoUrl) || undefined,
-        email: str(value.email) || undefined,
         phone: str(value.phone) || undefined,
         departmentId,
         position: str(value.position),
@@ -144,7 +143,6 @@ function EmployeesPage() {
                 code: editing.code,
                 name: editing.name,
                 photoUrl: editing.photoUrl ?? "",
-                email: editing.email ?? "",
                 phone: editing.phone ?? "",
                 department: departmentName(editing.departmentId),
                 position: editing.position,
@@ -168,7 +166,6 @@ function EmployeesPage() {
           { name: "basicSalary", label: "Basic salary", type: "number", half: true },
           { name: "allowances", label: "Allowances", type: "number", half: true },
           { name: "deductions", label: "Deductions", type: "number", half: true },
-          { name: "email", label: "Email", type: "text", half: true },
           { name: "phone", label: "Phone", type: "text", half: true },
           { name: "photoUrl", label: "Photo URL", type: "text" },
         ]}
@@ -192,7 +189,6 @@ function EmployeesPage() {
                 { label: "Allowances", value: money(detail.allowances) },
                 { label: "Deductions", value: money(detail.deductions) },
                 { label: "Net (before absence)", value: money(detail.basicSalary + detail.allowances - detail.deductions) },
-                { label: "Email", value: detail.email ?? "—" },
                 { label: "Phone", value: detail.phone ?? "—" },
               ]
             : []
