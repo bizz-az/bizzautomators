@@ -8,6 +8,7 @@ import {
   useCompliance, APPLICABILITY_LABEL, BUSINESS_TYPES, LEGAL_FORMS, SECTORS, SIZE_CATEGORIES, TAX_REGISTRATIONS,
 } from "@/components/compliance/compliance-provider";
 import { Button } from "@/components/ui/button";
+import { useBusinessProfile } from "@/hooks/use-business-profile";
 
 export const Route = createFileRoute("/_authenticated/m/compliance/profile")({
   head: () => ({
@@ -24,6 +25,18 @@ export const Route = createFileRoute("/_authenticated/m/compliance/profile")({
 function ProfilePage() {
   const { profile, saveProfile, rules, applicability, metrics } = useCompliance();
   const [open, setOpen] = useState(false);
+  const account = useBusinessProfile();
+
+  const businessName = profile.name || account.name;
+  const incomplete = metrics.profileCompleteness < 100;
+
+  // Only obligations that concern THIS business: anything ruled out by the
+  // registration details is hidden instead of being listed as noise.
+  const relevant = rules.filter(
+    (rule) => (applicability[rule.id]?.state ?? "requires_review") !== "not_applicable",
+  );
+  const applicable = relevant.filter((rule) => applicability[rule.id]?.state === "applicable");
+  const toConfirm = relevant.filter((rule) => applicability[rule.id]?.state !== "applicable");
 
   return (
     <TaxWorkspace
@@ -36,6 +49,8 @@ function ProfilePage() {
     >
       <SummaryStrip
         items={[
+          { label: "Business name", value: businessName || "Not set" },
+          { label: "Phone", value: account.phone || "Not set" },
           { label: "Profile completeness", value: `${metrics.profileCompleteness}%`, tone: metrics.profileCompleteness === 100 ? "success" : "warning" },
           { label: "Business type", value: profile.businessType || "Not set" },
           { label: "Legal form", value: profile.legalForm || "Not set" },
@@ -47,10 +62,24 @@ function ProfilePage() {
         ]}
       />
 
+      {incomplete ? (
+        <section className="rounded-3xl border border-amber-300/30 bg-amber-400/10 p-4">
+          <p className="text-sm text-amber-100">
+            Baadhi ya taarifa za usajili wa biashara hazijakamilika. Kamilisha profile ili mfumo uonyeshe
+            matakwa yanayohusu biashara yako pekee.
+          </p>
+          <Button size="sm" className="mt-3 h-9 bg-amber-400 text-black hover:bg-amber-300" onClick={() => setOpen(true)}>
+            Complete profile
+          </Button>
+        </section>
+      ) : null}
+
       <section className="rounded-3xl border border-white/15 bg-white/[0.06] p-4 backdrop-blur-xl">
-        <h3 className="font-display text-sm font-semibold uppercase tracking-[0.16em] text-white/60">Applicability from this profile</h3>
+        <h3 className="font-display text-sm font-semibold uppercase tracking-[0.16em] text-white/60">
+          Requirements for this business
+        </h3>
         <ul className="mt-3 divide-y divide-white/[0.07]">
-          {rules.map((rule) => (
+          {[...applicable, ...toConfirm].map((rule) => (
             <li key={rule.id} className="flex flex-wrap items-center gap-3 py-3">
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-white">{rule.name}</p>
@@ -59,6 +88,11 @@ function ProfilePage() {
               <StatusBadge value={APPLICABILITY_LABEL[applicability[rule.id]?.state ?? "requires_review"]} />
             </li>
           ))}
+          {relevant.length === 0 ? (
+            <li className="py-3 text-sm text-white/50">
+              Hakuna matakwa yanayohusu biashara yako kwa taarifa zilizopo.
+            </li>
+          ) : null}
         </ul>
       </section>
 

@@ -7,9 +7,20 @@ export function useBusinessProfile() {
 
   useEffect(() => {
     void (async () => {
-      const { data } = await supabase.from("profiles").select("business_name, full_name").limit(1).maybeSingle();
-      const name = (data as any)?.business_name || (data as any)?.full_name || "Bizz";
-      setProfile((prev) => ({ ...prev, name }));
+      const { data: auth } = await supabase.auth.getUser();
+      const userId = auth.user?.id;
+      if (!userId) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select("business_name, full_name, phone")
+        .eq("id", userId)
+        .maybeSingle();
+      const row = data as any;
+      setProfile((prev) => ({
+        ...prev,
+        name: row?.business_name || row?.full_name || "Bizz",
+        phone: row?.phone ?? "",
+      }));
     })();
   }, []);
 
