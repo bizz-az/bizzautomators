@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { Loader2, X, LogIn, UserPlus } from "lucide-react";
 import desertSunsetBg from "@/assets/desert-sunset-bg.jpg";
