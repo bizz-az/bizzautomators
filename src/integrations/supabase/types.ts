@@ -17,7 +17,7 @@ export type Database = {
       admin_audit_logs: {
         Row: {
           action: string
-          actor_id: string | null
+          actor_id: string
           actor_label: string | null
           created_at: string
           id: string
@@ -29,7 +29,7 @@ export type Database = {
         }
         Insert: {
           action: string
-          actor_id?: string | null
+          actor_id?: string
           actor_label?: string | null
           created_at?: string
           id?: string
@@ -41,7 +41,7 @@ export type Database = {
         }
         Update: {
           action?: string
-          actor_id?: string | null
+          actor_id?: string
           actor_label?: string | null
           created_at?: string
           id?: string
@@ -55,24 +55,156 @@ export type Database = {
       }
       business_settings: {
         Row: {
+          created_at: string
           description: string | null
           setting_key: string
           setting_value: string
           updated_at: string
+          user_id: string
         }
         Insert: {
+          created_at?: string
           description?: string | null
           setting_key: string
           setting_value?: string
           updated_at?: string
+          user_id?: string
         }
         Update: {
+          created_at?: string
           description?: string | null
           setting_key?: string
           setting_value?: string
           updated_at?: string
+          user_id?: string
         }
         Relationships: []
+      }
+      campaign_results: {
+        Row: {
+          campaign_id: string
+          clicks: number
+          created_at: string
+          customers_acquired: number
+          engagement: number
+          extra_cost: number
+          id: string
+          impressions: number
+          leads: number
+          reach: number
+          revenue: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          campaign_id: string
+          clicks?: number
+          created_at?: string
+          customers_acquired?: number
+          engagement?: number
+          extra_cost?: number
+          id?: string
+          impressions?: number
+          leads?: number
+          reach?: number
+          revenue?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          clicks?: number
+          created_at?: string
+          customers_acquired?: number
+          engagement?: number
+          extra_cost?: number
+          id?: string
+          impressions?: number
+          leads?: number
+          reach?: number
+          revenue?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_results_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: true
+            referencedRelation: "marketing_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_share_plan: {
+        Row: {
+          audience_id: string | null
+          campaign_id: string | null
+          channel: string | null
+          channel_id: string | null
+          content: string
+          created_at: string
+          id: string
+          owner: string | null
+          publish_date: string | null
+          publish_time: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          audience_id?: string | null
+          campaign_id?: string | null
+          channel?: string | null
+          channel_id?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          owner?: string | null
+          publish_date?: string | null
+          publish_time?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          audience_id?: string | null
+          campaign_id?: string | null
+          channel?: string | null
+          channel_id?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          owner?: string | null
+          publish_date?: string | null
+          publish_time?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_share_plan_audience_id_fkey"
+            columns: ["audience_id"]
+            isOneToOne: false
+            referencedRelation: "market_audiences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_share_plan_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_share_plan_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "customer_channels"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       capital_assets: {
         Row: {
@@ -119,6 +251,288 @@ export type Database = {
         }
         Relationships: []
       }
+      compliance_evidence: {
+        Row: {
+          created_at: string
+          document_id: string
+          id: string
+          obligation_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          document_id: string
+          id?: string
+          obligation_id: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          id?: string
+          obligation_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_evidence_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "tax_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_evidence_obligation_id_fkey"
+            columns: ["obligation_id"]
+            isOneToOne: false
+            referencedRelation: "compliance_obligations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      compliance_licences: {
+        Row: {
+          authority: string | null
+          created_at: string
+          document_id: string | null
+          expiry_date: string | null
+          fee_amount: number | null
+          id: string
+          issue_date: string | null
+          licence_type: string | null
+          name: string
+          notes: string | null
+          obligation_id: string | null
+          payment_status: string | null
+          reference: string | null
+          renewal_frequency: string | null
+          renewal_required: boolean
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          authority?: string | null
+          created_at?: string
+          document_id?: string | null
+          expiry_date?: string | null
+          fee_amount?: number | null
+          id?: string
+          issue_date?: string | null
+          licence_type?: string | null
+          name: string
+          notes?: string | null
+          obligation_id?: string | null
+          payment_status?: string | null
+          reference?: string | null
+          renewal_frequency?: string | null
+          renewal_required?: boolean
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          authority?: string | null
+          created_at?: string
+          document_id?: string | null
+          expiry_date?: string | null
+          fee_amount?: number | null
+          id?: string
+          issue_date?: string | null
+          licence_type?: string | null
+          name?: string
+          notes?: string | null
+          obligation_id?: string | null
+          payment_status?: string | null
+          reference?: string | null
+          renewal_frequency?: string | null
+          renewal_required?: boolean
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_licences_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "tax_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_licences_obligation_id_fkey"
+            columns: ["obligation_id"]
+            isOneToOne: false
+            referencedRelation: "compliance_obligations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      compliance_obligations: {
+        Row: {
+          amount_due: number | null
+          applicability: string
+          authority: string | null
+          category: string
+          created_at: string
+          description: string | null
+          document_id: string | null
+          due_date: string | null
+          evidence_required: boolean
+          expiry_date: string | null
+          filing_required: boolean
+          filing_status: string | null
+          frequency: string | null
+          id: string
+          name: string
+          notes: string | null
+          payment_required: boolean
+          payment_status: string | null
+          period: string | null
+          registration_state: string | null
+          reminder_on: boolean
+          rule_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount_due?: number | null
+          applicability?: string
+          authority?: string | null
+          category: string
+          created_at?: string
+          description?: string | null
+          document_id?: string | null
+          due_date?: string | null
+          evidence_required?: boolean
+          expiry_date?: string | null
+          filing_required?: boolean
+          filing_status?: string | null
+          frequency?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          payment_required?: boolean
+          payment_status?: string | null
+          period?: string | null
+          registration_state?: string | null
+          reminder_on?: boolean
+          rule_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount_due?: number | null
+          applicability?: string
+          authority?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          document_id?: string | null
+          due_date?: string | null
+          evidence_required?: boolean
+          expiry_date?: string | null
+          filing_required?: boolean
+          filing_status?: string | null
+          frequency?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          payment_required?: boolean
+          payment_status?: string | null
+          period?: string | null
+          registration_state?: string | null
+          reminder_on?: boolean
+          rule_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "compliance_obligations_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "tax_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "compliance_obligations_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "compliance_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      compliance_rules: {
+        Row: {
+          active: boolean
+          authority: string | null
+          basis: string
+          category: string
+          conditions: Json
+          configured: boolean
+          created_at: string
+          description: string | null
+          due_rule: Json | null
+          frequency: string
+          id: string
+          name: string
+          notes: string | null
+          requires_evidence: boolean
+          requires_filing: boolean
+          requires_payment: boolean
+          requires_renewal: boolean
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          active?: boolean
+          authority?: string | null
+          basis?: string
+          category: string
+          conditions?: Json
+          configured?: boolean
+          created_at?: string
+          description?: string | null
+          due_rule?: Json | null
+          frequency?: string
+          id?: string
+          name: string
+          notes?: string | null
+          requires_evidence?: boolean
+          requires_filing?: boolean
+          requires_payment?: boolean
+          requires_renewal?: boolean
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          active?: boolean
+          authority?: string | null
+          basis?: string
+          category?: string
+          conditions?: Json
+          configured?: boolean
+          created_at?: string
+          description?: string | null
+          due_rule?: Json | null
+          frequency?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          requires_evidence?: boolean
+          requires_filing?: boolean
+          requires_payment?: boolean
+          requires_renewal?: boolean
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       customer_channels: {
         Row: {
           active: boolean
@@ -154,51 +568,83 @@ export type Database = {
       }
       customers: {
         Row: {
+          acquired_campaign_id: string | null
           address: string | null
+          audience_id: string | null
           channel_id: string | null
           created_at: string
           customer_type: string
-          email: string | null
+          first_interaction_at: string | null
+          first_purchase_at: string | null
           id: string
+          last_activity_at: string | null
           location: string | null
           name: string
           notes: string | null
           phone: string | null
+          segment: string | null
+          source: string | null
           status: string
           updated_at: string
           user_id: string | null
         }
         Insert: {
+          acquired_campaign_id?: string | null
           address?: string | null
+          audience_id?: string | null
           channel_id?: string | null
           created_at?: string
           customer_type?: string
-          email?: string | null
+          first_interaction_at?: string | null
+          first_purchase_at?: string | null
           id?: string
+          last_activity_at?: string | null
           location?: string | null
           name: string
           notes?: string | null
           phone?: string | null
+          segment?: string | null
+          source?: string | null
           status?: string
           updated_at?: string
           user_id?: string | null
         }
         Update: {
+          acquired_campaign_id?: string | null
           address?: string | null
+          audience_id?: string | null
           channel_id?: string | null
           created_at?: string
           customer_type?: string
-          email?: string | null
+          first_interaction_at?: string | null
+          first_purchase_at?: string | null
           id?: string
+          last_activity_at?: string | null
           location?: string | null
           name?: string
           notes?: string | null
           phone?: string | null
+          segment?: string | null
+          source?: string | null
           status?: string
           updated_at?: string
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "customers_acquired_campaign_id_fkey"
+            columns: ["acquired_campaign_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customers_audience_id_fkey"
+            columns: ["audience_id"]
+            isOneToOne: false
+            referencedRelation: "market_audiences"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "customers_channel_id_fkey"
             columns: ["channel_id"]
@@ -212,7 +658,6 @@ export type Database = {
         Row: {
           created_at: string
           department: string | null
-          email: string | null
           hired_on: string | null
           id: string
           name: string
@@ -226,7 +671,6 @@ export type Database = {
         Insert: {
           created_at?: string
           department?: string | null
-          email?: string | null
           hired_on?: string | null
           id?: string
           name: string
@@ -240,7 +684,6 @@ export type Database = {
         Update: {
           created_at?: string
           department?: string | null
-          email?: string | null
           hired_on?: string | null
           id?: string
           name?: string
@@ -346,6 +789,7 @@ export type Database = {
           entity: string
           entity_id: string | null
           id: string
+          updated_at: string
           user_id: string | null
         }
         Insert: {
@@ -356,6 +800,7 @@ export type Database = {
           entity: string
           entity_id?: string | null
           id?: string
+          updated_at?: string
           user_id?: string | null
         }
         Update: {
@@ -366,6 +811,7 @@ export type Database = {
           entity?: string
           entity_id?: string | null
           id?: string
+          updated_at?: string
           user_id?: string | null
         }
         Relationships: []
@@ -686,47 +1132,112 @@ export type Database = {
           },
         ]
       }
-      marketing_campaigns: {
+      market_audiences: {
         Row: {
-          budget: number
-          channel: string
+          available_customers: number
+          channels: string[]
           created_at: string
-          description: string | null
-          end_date: string | null
           id: string
           name: string
-          start_date: string | null
-          status: string
+          notes: string | null
+          reach_customers: number
+          region: string | null
           updated_at: string
           user_id: string | null
         }
         Insert: {
-          budget?: number
-          channel?: string
+          available_customers?: number
+          channels?: string[]
           created_at?: string
-          description?: string | null
-          end_date?: string | null
           id?: string
           name: string
-          start_date?: string | null
-          status?: string
+          notes?: string | null
+          reach_customers?: number
+          region?: string | null
           updated_at?: string
           user_id?: string | null
         }
         Update: {
-          budget?: number
-          channel?: string
+          available_customers?: number
+          channels?: string[]
           created_at?: string
-          description?: string | null
-          end_date?: string | null
           id?: string
           name?: string
-          start_date?: string | null
-          status?: string
+          notes?: string | null
+          reach_customers?: number
+          region?: string | null
           updated_at?: string
           user_id?: string | null
         }
         Relationships: []
+      }
+      marketing_campaigns: {
+        Row: {
+          audience_id: string | null
+          budget: number
+          channel: string
+          content: string | null
+          created_at: string
+          description: string | null
+          end_date: string | null
+          expected_customers: number
+          id: string
+          name: string
+          objective: string | null
+          segment: string | null
+          start_date: string | null
+          status: string
+          template_key: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          audience_id?: string | null
+          budget?: number
+          channel?: string
+          content?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          expected_customers?: number
+          id?: string
+          name: string
+          objective?: string | null
+          segment?: string | null
+          start_date?: string | null
+          status?: string
+          template_key?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          audience_id?: string | null
+          budget?: number
+          channel?: string
+          content?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          expected_customers?: number
+          id?: string
+          name?: string
+          objective?: string | null
+          segment?: string | null
+          start_date?: string | null
+          status?: string
+          template_key?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_campaigns_audience_id_fkey"
+            columns: ["audience_id"]
+            isOneToOne: false
+            referencedRelation: "market_audiences"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       paye_records: {
         Row: {
@@ -914,33 +1425,66 @@ export type Database = {
       }
       profiles: {
         Row: {
+          activities: string[]
+          annual_turnover: number | null
           business_name: string | null
+          business_type: string | null
           created_at: string
-          email: string | null
+          does_export: boolean
+          does_import: boolean
+          employee_count: number | null
           full_name: string | null
           id: string
           last_seen_at: string | null
+          legal_form: string | null
+          phone: string | null
+          region: string | null
+          sector: string | null
+          size_category: string | null
           status: string
+          tax_registrations: string[]
           updated_at: string
         }
         Insert: {
+          activities?: string[]
+          annual_turnover?: number | null
           business_name?: string | null
+          business_type?: string | null
           created_at?: string
-          email?: string | null
+          does_export?: boolean
+          does_import?: boolean
+          employee_count?: number | null
           full_name?: string | null
           id: string
           last_seen_at?: string | null
+          legal_form?: string | null
+          phone?: string | null
+          region?: string | null
+          sector?: string | null
+          size_category?: string | null
           status?: string
+          tax_registrations?: string[]
           updated_at?: string
         }
         Update: {
+          activities?: string[]
+          annual_turnover?: number | null
           business_name?: string | null
+          business_type?: string | null
           created_at?: string
-          email?: string | null
+          does_export?: boolean
+          does_import?: boolean
+          employee_count?: number | null
           full_name?: string | null
           id?: string
           last_seen_at?: string | null
+          legal_form?: string | null
+          phone?: string | null
+          region?: string | null
+          sector?: string | null
+          size_category?: string | null
           status?: string
+          tax_registrations?: string[]
           updated_at?: string
         }
         Relationships: []
@@ -1630,7 +2174,6 @@ export type Database = {
         Row: {
           address: string | null
           created_at: string
-          email: string | null
           id: string
           name: string
           notes: string | null
@@ -1642,7 +2185,6 @@ export type Database = {
         Insert: {
           address?: string | null
           created_at?: string
-          email?: string | null
           id?: string
           name: string
           notes?: string | null
@@ -1654,7 +2196,6 @@ export type Database = {
         Update: {
           address?: string | null
           created_at?: string
-          email?: string | null
           id?: string
           name?: string
           notes?: string | null
