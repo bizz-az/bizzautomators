@@ -212,7 +212,7 @@ const DEFAULT_RULES: ComplianceRule[] = [
     authority: "Revenue authority",
     description: "Transaction-triggered: arises when the business makes a payment of a withholding type.",
     basis: "transaction",
-    conditions: [],
+    conditions: [{ field: "taxRegistrations", operator: "includes", value: "Withholding Tax" }],
     frequency: "Event-based",
     requiresFiling: true, requiresPayment: true, requiresRenewal: false, requiresEvidence: true,
     dueRule: null, configured: false,
@@ -379,9 +379,14 @@ function fieldValue(profile: BusinessProfile, field: ProfileField): unknown {
   return (profile as unknown as Record<string, unknown>)[field];
 }
 
+/**
+ * A field counts as "missing" only when the business never answered it.
+ * An empty list (e.g. no tax registrations selected at sign up) IS an answer,
+ * so the rule resolves to not applicable instead of asking again.
+ */
 function isMissing(value: unknown) {
+  if (Array.isArray(value)) return false;
   if (value === null || value === undefined || value === "") return true;
-  if (Array.isArray(value)) return value.length === 0;
   if (value === "Not set") return true;
   return false;
 }
@@ -727,13 +732,14 @@ export function ComplianceProvider({ children }: { children: ReactNode }) {
     const counted = obligations.map((row) => ({ row, status: deriveStatus(row) }));
     const applicableRows = counted.filter((item) => item.row.applicability === "applicable");
     const outstandingRows = applicableRows.filter((item) => item.status !== "Compliant" && item.status !== "Not Applicable");
+    // Completeness is measured against the fields the business actually
+    // answers when registering (sign up), not against optional extras.
     const profileFields = [
-      state.profile.businessType, state.profile.legalForm, state.profile.sector, state.profile.region,
-      state.profile.sizeCategory === "Not set" ? "" : state.profile.sizeCategory,
-      state.profile.annualTurnover === null ? "" : "x",
+      state.profile.name,
+      state.profile.businessType,
+      state.profile.legalForm,
+      state.profile.sector,
       state.profile.employeeCount === null ? "" : "x",
-      state.profile.taxRegistrations.length ? "x" : "",
-      state.profile.activities.length ? "x" : "",
     ];
     return {
       total: counted.length,
