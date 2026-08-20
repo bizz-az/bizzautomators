@@ -101,6 +101,10 @@ const hasRegistration = (c: BusinessCharacteristics, code: string) =>
 const employees = (c: BusinessCharacteristics) =>
   (c.employeeCount ?? 0) > 0;
 
+/** Reads an operational flag, falling back to a default when unset. */
+const flag = (c: BusinessCharacteristics, key: string, fallback: boolean) =>
+  c.flags?.[key] ?? fallback;
+
 /**
  * One central rule table. Adding a future characteristic or capability means
  * adding one entry here — never a scattered `if (businessType === ...)`.
