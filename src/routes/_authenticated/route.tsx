@@ -1,10 +1,10 @@
-import { createFileRoute, Outlet, Link, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Outlet, Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import {
   LayoutDashboard, ShoppingCart, Package, Wallet, Users, BarChart3, Settings,
-  Bell, ShieldCheck, UserRound,
+  Bell, ShieldCheck, UserRound, LogOut, Building2,
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import desertSunsetBg from "@/assets/desert-sunset-bg.jpg";
 import { MobileNav } from "@/components/mobile-nav";
 import { BusinessScopeProvider, useBusinessScope } from "@/components/business-scope-provider";
@@ -64,6 +64,35 @@ function AuthedLayout() {
   const heading = useHeading(pathname);
   const { moduleAllowed } = useBusinessScope();
   const modules = MODULES.filter((item) => moduleAllowed(item.key));
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { data: account } = useQuery({
+    queryKey: ["current-account"],
+    queryFn: async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      const user = auth.user;
+      if (!user) return null;
+      const { data } = await supabase
+        .from("profiles")
+        .select("business_name, full_name, phone")
+        .eq("id", user.id)
+        .maybeSingle();
+      return {
+        businessName: data?.business_name || data?.full_name || "My Business",
+        owner: data?.full_name || "",
+        phone: data?.phone || user.phone || "",
+      };
+    },
+    staleTime: 60000,
+  });
+
+  async function handleSignOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
 
 
   const { data: alerts } = useQuery({
@@ -111,7 +140,7 @@ function AuthedLayout() {
             className="h-55 w-45 rounded-3xl object-contain"
           />
         </div>
-        <nav className="flex-1 space-y-2 px-3 py-4 pb-8">
+        <nav className="flex-1 space-y-2 overflow-y-auto px-3 py-4 pb-4">
           {modules.map((item) => {
             const active =
               pathname === item.to ||
@@ -141,6 +170,31 @@ function AuthedLayout() {
             );
           })}
         </nav>
+
+        <div className="border-t border-sidebar-border p-3">
+          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-3">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-amber-400/15 text-amber-400">
+              <Building2 className="h-4 w-4" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold text-foreground">
+                {account?.businessName ?? "Loading…"}
+              </p>
+              {account?.phone ? (
+                <p className="truncate text-xs text-sidebar-foreground/70">{account.phone}</p>
+              ) : null}
+            </div>
+          </div>
+          <button
+            onClick={handleSignOut}
+            className="mt-2 flex w-full items-center gap-3 rounded-2xl border border-transparent px-3 py-2.5 text-sm font-medium text-sidebar-foreground/80 transition hover:border-white/10 hover:bg-white/10 hover:text-foreground"
+          >
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/5">
+              <LogOut className="h-4 w-4" />
+            </span>
+            <span>Sign out</span>
+          </button>
+        </div>
       </aside>
 
       <div id="app-scroll" className="relative z-10 flex h-screen flex-1 flex-col overflow-y-auto">
@@ -153,7 +207,10 @@ function AuthedLayout() {
           <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-black/70 via-black/45 to-black/60" />
           <div className="relative flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-white/80 md:text-base">{heading.subtitle}</p>
+              <p className="truncate text-sm font-semibold text-white md:text-base">
+                {account?.businessName ?? heading.title}
+              </p>
+              <p className="truncate text-xs text-white/70">{heading.subtitle}</p>
             </div>
             <div className="flex shrink-0 items-center gap-3">
               <button className="relative grid h-9 w-9 place-items-center rounded-full bg-white/5 text-white/80 transition hover:bg-white/10">
@@ -161,6 +218,14 @@ function AuthedLayout() {
                 {alerts && alerts > 0 ? (
                   <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-amber-400 px-1 text-[10px] font-bold text-black">{alerts}</span>
                 ) : null}
+              </button>
+              <button
+                onClick={handleSignOut}
+                aria-label="Sign out"
+                title="Sign out"
+                className="grid h-9 w-9 place-items-center rounded-full bg-white/5 text-white/80 transition hover:bg-white/10"
+              >
+                <LogOut className="h-4 w-4" />
               </button>
             </div>
           </div>
