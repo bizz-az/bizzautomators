@@ -552,29 +552,69 @@ export function ComplianceProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => { setComplianceDueSoonWindow(tax.dueSoonDays); }, [tax.dueSoonDays]);
 
-  // Reuse the existing business registration data (profiles table) as the
-  // starting point for the profile — no second registration surface.
+  // The business profile IS the registration record: it is read from and
+  // written back to the signed-in user's `profiles` row. Local storage only
+  // acts as an offline cache of that row.
   useEffect(() => {
     void (async () => {
-      const { data } = await supabase.from("profiles").select("*").limit(1).maybeSingle();
+      const { data: auth } = await supabase.auth.getUser();
+      const userId = auth.user?.id;
+      if (!userId) return;
+      const { data } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
       if (!data) return;
       const row = data as unknown as Record<string, unknown>;
+      const list = (value: unknown) => (Array.isArray(value) ? value.map(String) : []);
       setState((current) => ({
         ...current,
         profile: {
-          ...current.profile,
-          name: current.profile.name || String(row["business_name"] ?? row["full_name"] ?? ""),
-          businessType: current.profile.businessType || String(row["business_type"] ?? ""),
-          legalForm: current.profile.legalForm || String(row["legal_form"] ?? ""),
-          sector: current.profile.sector || String(row["sector"] ?? ""),
-          region: current.profile.region || String(row["region"] ?? ""),
+          name: String(row["business_name"] ?? row["full_name"] ?? ""),
+          businessType: String(row["business_type"] ?? ""),
+          legalForm: String(row["legal_form"] ?? ""),
+          sector: String(row["sector"] ?? ""),
+          region: String(row["region"] ?? ""),
+          sizeCategory: String(row["size_category"] ?? "Not set") || "Not set",
+          activities: list(row["activities"]),
+          taxRegistrations: list(row["tax_registrations"]),
+          annualTurnover: row["annual_turnover"] === null || row["annual_turnover"] === undefined
+            ? null
+            : Number(row["annual_turnover"]),
+          employeeCount: row["employee_count"] === null || row["employee_count"] === undefined
+            ? null
+            : Number(row["employee_count"]),
+          doesImport: Boolean(row["does_import"]),
+          doesExport: Boolean(row["does_export"]),
         },
       }));
     })();
   }, []);
 
   const saveProfile = useCallback((patch: Partial<BusinessProfile>) => {
-    setState((current) => ({ ...current, profile: { ...current.profile, ...patch } }));
+    setState((current) => {
+      const next = { ...current.profile, ...patch };
+      void (async () => {
+        const { data: auth } = await supabase.auth.getUser();
+        const userId = auth.user?.id;
+        if (!userId) return;
+        await supabase
+          .from("profiles")
+          .update({
+            business_name: next.name,
+            business_type: next.businessType,
+            legal_form: next.legalForm,
+            sector: next.sector,
+            region: next.region,
+            size_category: next.sizeCategory,
+            activities: next.activities,
+            tax_registrations: next.taxRegistrations,
+            annual_turnover: next.annualTurnover,
+            employee_count: next.employeeCount,
+            does_import: next.doesImport,
+            does_export: next.doesExport,
+          })
+          .eq("id", userId);
+      })();
+      return { ...current, profile: next };
+    });
   }, []);
 
   const saveRule = useCallback((rule: ComplianceRule) => {
