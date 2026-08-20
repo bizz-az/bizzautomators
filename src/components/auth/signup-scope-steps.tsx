@@ -8,9 +8,14 @@
 import {
   type BusinessCharacteristics,
 } from "@/lib/business-scope";
-import { BUSINESS_TYPES, LEGAL_FORMS, SECTORS } from "@/components/compliance/compliance-provider";
+import {
+  BUSINESS_TYPES,
+  LEGAL_FORMS,
+  SECTORS,
+  TAX_REGISTRATIONS,
+} from "@/components/compliance/compliance-provider";
 
-export const TAX_REGISTRATIONS = ["TIN", "VAT", "PAYE", "SDL", "WHT"];
+export { TAX_REGISTRATIONS };
 
 const inputCls =
   "w-full rounded-xl border border-white/15 bg-white/[0.06] px-4 py-3 text-sm text-white placeholder-white/40 outline-none transition focus:border-amber-400/60";
