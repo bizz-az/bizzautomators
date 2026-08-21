@@ -11,9 +11,21 @@ export const WELCOME_SEEN_KEY = "bizz.welcome.seen";
  */
 export function WelcomeScreen({ onComplete }: { onComplete: () => void }) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const [span, setSpan] = useState(0);
   const [progress, setProgress] = useState(0); // 0..1
   const [dragging, setDragging] = useState(false);
   const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    const update = () => {
+      const track = trackRef.current;
+      if (track) setSpan(Math.max(0, track.clientWidth - 56 - 8));
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
 
   const finish = useCallback(() => {
     if (done) return;
