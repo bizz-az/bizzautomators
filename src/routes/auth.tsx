@@ -162,7 +162,8 @@ function AuthPage() {
     try {
       if (mode === "signup") {
         savePendingScope({ phone: normalizePhone(phone), characteristics, plan: "full" });
-        const { error } = await supabase.auth.signUp({
+        celebratingRef.current = true;
+        const { data, error } = await supabase.auth.signUp({
           email: phoneIdentity(phone),
           password,
           options: {
