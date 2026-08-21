@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { PartyPopper } from "lucide-react";
+import { Loader2, PartyPopper } from "lucide-react";
 
 type Particle = {
   x: number;
@@ -25,20 +25,31 @@ export function Celebration({
   title = "Congratulations!",
   message = "Your account is ready.",
   actionLabel = "Continue",
+  autoDoneMs = 4200,
   onDone,
 }: {
   title?: string;
   message?: string;
   actionLabel?: string;
+  autoDoneMs?: number;
   onDone: () => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [burst, setBurst] = useState(false);
+  const doneRef = useRef(onDone);
+  doneRef.current = onDone;
 
   useEffect(() => {
     const t = window.setTimeout(() => setBurst(true), 520);
     return () => window.clearTimeout(t);
   }, []);
+
+  useEffect(() => {
+    if (!autoDoneMs) return;
+    const t = window.setTimeout(() => doneRef.current(), autoDoneMs);
+    return () => window.clearTimeout(t);
+  }, [autoDoneMs]);
+
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -181,10 +192,12 @@ export function Celebration({
           <p className="mt-2 max-w-xs text-sm text-white/60">{message}</p>
           <button
             onClick={onDone}
-            className="mt-7 rounded-xl bg-amber-500 px-8 py-3 text-sm font-semibold text-black transition hover:bg-amber-400"
+            className="mt-7 flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-6 py-2.5 text-xs font-medium text-white/70 transition hover:bg-white/12 hover:text-white"
           >
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
             {actionLabel}
           </button>
+
         </div>
       </div>
     </div>
