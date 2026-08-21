@@ -416,7 +416,7 @@ function AuthPage() {
               ? "Your business account is ready. Let's get started."
               : "Your business account has been created. Sign in to continue."
           }
-          actionLabel={hasSessionRef.current ? "Go to dashboard" : "Sign in"}
+          actionLabel={hasSessionRef.current ? "Taking you to your dashboard…" : "Taking you to sign in…"}
           onDone={() => {
             celebratingRef.current = false;
             setCelebrate(false);
