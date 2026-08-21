@@ -232,7 +232,7 @@ function AuthPage() {
               type="tel"
               inputMode="tel"
               required
-              placeholder="Namba ya simu (07XX XXX XXX)"
+              placeholder="Phone number (07XX XXX XXX)"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
@@ -241,7 +241,7 @@ function AuthPage() {
               type="password"
               required
               minLength={6}
-              placeholder="Nenosiri"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -260,7 +260,7 @@ function AuthPage() {
               type="tel"
               inputMode="tel"
               required
-              placeholder="Namba ya simu"
+              placeholder="Phone number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
@@ -269,7 +269,7 @@ function AuthPage() {
               type="password"
               required
               minLength={6}
-              placeholder="Nenosiri"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
