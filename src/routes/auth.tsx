@@ -3,7 +3,9 @@ import { useEffect, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, X, LogIn, UserPlus } from "lucide-react";
-import desertSunsetBg from "@/assets/desert-sunset-bg.jpg";
+import welcomeBg from "@/assets/welcome-sunset.jpg";
+import { WelcomeScreen, WELCOME_SEEN_KEY } from "@/components/auth/welcome-screen";
+
 import { BusinessProfileStep } from "@/components/auth/signup-scope-steps";
 import { savePendingScope } from "@/lib/onboarding-scope";
 import { EMPTY_CHARACTERISTICS, type BusinessCharacteristics } from "@/lib/business-scope";
