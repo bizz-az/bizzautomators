@@ -6,6 +6,7 @@ import { Loader2, X, LogIn, UserPlus } from "lucide-react";
 import welcomeBg from "@/assets/welcome-sunset.jpg";
 import bizzLogo from "@/assets/bizz-logo.png";
 import { WelcomeScreen, WELCOME_SEEN_KEY } from "@/components/auth/welcome-screen";
+import { Celebration } from "@/components/auth/celebration";
 
 import { BusinessProfileStep } from "@/components/auth/signup-scope-steps";
 import { savePendingScope } from "@/lib/onboarding-scope";
