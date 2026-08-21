@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import welcomeBg from "@/assets/welcome-sunset.jpg";
+import bizzLogo from "@/assets/bizz-logo.png";
 
 export const WELCOME_SEEN_KEY = "bizz.welcome.seen";
 
