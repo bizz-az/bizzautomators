@@ -25,20 +25,31 @@ export function Celebration({
   title = "Congratulations!",
   message = "Your account is ready.",
   actionLabel = "Continue",
+  autoDoneMs = 4200,
   onDone,
 }: {
   title?: string;
   message?: string;
   actionLabel?: string;
+  autoDoneMs?: number;
   onDone: () => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [burst, setBurst] = useState(false);
+  const doneRef = useRef(onDone);
+  doneRef.current = onDone;
 
   useEffect(() => {
     const t = window.setTimeout(() => setBurst(true), 520);
     return () => window.clearTimeout(t);
   }, []);
+
+  useEffect(() => {
+    if (!autoDoneMs) return;
+    const t = window.setTimeout(() => doneRef.current(), autoDoneMs);
+    return () => window.clearTimeout(t);
+  }, [autoDoneMs]);
+
 
   useEffect(() => {
     const canvas = canvasRef.current;
