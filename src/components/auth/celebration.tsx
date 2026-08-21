@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { PartyPopper } from "lucide-react";
+import { Loader2, PartyPopper } from "lucide-react";
 
 type Particle = {
   x: number;
