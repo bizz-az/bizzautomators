@@ -116,6 +116,8 @@ function AuthPage() {
   const [showWelcome, setShowWelcome] = useState(false);
   const [revealed, setRevealed] = useState(true);
   const [celebrate, setCelebrate] = useState(false);
+  const celebratingRef = useRef(false);
+  const hasSessionRef = useRef(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
