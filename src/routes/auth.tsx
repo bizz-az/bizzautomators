@@ -407,6 +407,28 @@ function AuthPage() {
           }}
         />
       )}
+
+      {celebrate && (
+        <Celebration
+          title="Congratulations!"
+          message={
+            hasSessionRef.current
+              ? "Your business account is ready. Let's get started."
+              : "Your business account has been created. Sign in to continue."
+          }
+          actionLabel={hasSessionRef.current ? "Go to dashboard" : "Sign in"}
+          onDone={() => {
+            celebratingRef.current = false;
+            setCelebrate(false);
+            if (hasSessionRef.current) {
+              navigate({ to: "/dashboard", replace: true });
+            } else {
+              setPassword("");
+              setMode("signin");
+            }
+          }}
+        />
+      )}
     </main>
   );
 
