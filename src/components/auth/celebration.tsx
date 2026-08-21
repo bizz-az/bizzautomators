@@ -192,10 +192,12 @@ export function Celebration({
           <p className="mt-2 max-w-xs text-sm text-white/60">{message}</p>
           <button
             onClick={onDone}
-            className="mt-7 rounded-xl bg-amber-500 px-8 py-3 text-sm font-semibold text-black transition hover:bg-amber-400"
+            className="mt-7 flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-6 py-2.5 text-xs font-medium text-white/70 transition hover:bg-white/12 hover:text-white"
           >
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
             {actionLabel}
           </button>
+
         </div>
       </div>
     </div>
