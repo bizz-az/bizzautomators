@@ -109,16 +109,27 @@ function AuthPage() {
     flags: {},
   });
   const [busy, setBusy] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [revealed, setRevealed] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/dashboard", replace: true });
+      if (data.session) {
+        navigate({ to: "/dashboard", replace: true });
+        return;
+      }
+      // First launch only: returning users go straight to sign in.
+      if (window.localStorage.getItem(WELCOME_SEEN_KEY) !== "1") {
+        setShowWelcome(true);
+        setRevealed(false);
+      }
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       if (session) navigate({ to: "/dashboard", replace: true });
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
+
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
