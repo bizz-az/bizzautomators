@@ -64,8 +64,10 @@ function AuthDrawer({
         className={`absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity ${open ? "opacity-100" : "opacity-0"}`}
       />
       <div
-        className={`absolute inset-x-0 bottom-0 mx-auto flex max-h-[92vh] w-full max-w-md flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0b0d12]/95 text-white shadow-[0_-30px_90px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl transition-transform duration-300 ease-out ${
-          open ? "translate-y-0" : "translate-y-full"
+        className={`absolute inset-x-0 bottom-0 mx-auto flex max-h-[92vh] w-full max-w-md flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0b0d12]/95 text-white shadow-[0_-30px_90px_-30px_rgba(0,0,0,0.9)] backdrop-blur-xl transition-all duration-300 ease-out sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-h-[88vh] sm:-translate-x-1/2 sm:rounded-3xl sm:shadow-[0_40px_100px_-40px_rgba(0,0,0,0.95)] ${
+          open
+            ? "translate-y-0 sm:-translate-y-1/2 sm:scale-100 sm:opacity-100"
+            : "translate-y-full sm:translate-y-[-46%] sm:scale-95 sm:opacity-0"
         }`}
         role="dialog"
         aria-modal="true"
