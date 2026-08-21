@@ -124,7 +124,7 @@ export function WelcomeScreen({ onComplete }: { onComplete: () => void }) {
           {/* Swipe track */}
           <div
             ref={trackRef}
-            className="relative mt-10 h-16 w-full overflow-hidden rounded-full border border-white/12 bg-[rgba(32,20,12,0.45)] shadow-[0_18px_50px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl"
+            className="relative mt-10 h-16 w-full rounded-full border border-white/12 bg-[rgba(32,20,12,0.45)] shadow-[0_18px_50px_-20px_rgba(0,0,0,0.9)] backdrop-blur-xl"
             style={{ touchAction: "none" }}
           >
             <div
