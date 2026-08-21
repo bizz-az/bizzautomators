@@ -143,18 +143,11 @@ export function WelcomeScreen({ onComplete }: { onComplete: () => void }) {
               className="absolute top-1/2 grid h-14 w-14 -translate-y-1/2 cursor-grab place-items-center rounded-full border border-amber-200/40 bg-gradient-to-b from-amber-300 to-amber-500 text-[#1a1005] active:cursor-grabbing"
               style={{
                 left: 4,
-                transform: `translate3d(calc(${progress} * (100% * 0 + var(--span, 0px))), -50%, 0)`,
-                marginLeft: `calc(${progress} * (100vw * 0))`,
-                translate: `calc(${progress} * (var(--track-span, 0px)))`,
+                transform: `translate3d(${progress * span}px, -50%, 0)`,
                 boxShadow: `0 8px 26px -8px rgba(214,158,74,${0.45 + progress * 0.45})`,
-                transition: dragging ? "none" : "translate 420ms cubic-bezier(0.22,1,0.36,1), box-shadow 300ms ease",
+                transition: dragging ? "none" : "transform 420ms cubic-bezier(0.22,1,0.36,1), box-shadow 300ms ease",
               }}
-              ref={(el) => {
-                const track = trackRef.current;
-                if (el && track) {
-                  el.style.setProperty("--track-span", `${track.clientWidth - 56 - 8}px`);
-                }
-              }}
+
             >
               <ArrowRight className="h-5 w-5" />
             </button>
