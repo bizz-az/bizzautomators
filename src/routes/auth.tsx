@@ -140,7 +140,7 @@ function AuthPage() {
     e.preventDefault();
     if (mode === "signup" && signupStep < 2) {
       if (signupStep === 1 && (!fullName.trim() || !isValidPhone(phone) || password.length < 6)) {
-        toast.error("Weka jina lako, namba sahihi ya simu, na nenosiri lenye herufi 6 au zaidi");
+        toast.error("Enter your name, a valid phone number, and a password of at least 6 characters");
         return;
       }
       if (
