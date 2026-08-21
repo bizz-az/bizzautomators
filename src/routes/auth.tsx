@@ -335,10 +335,12 @@ function AuthPage() {
           transition: "transform 620ms cubic-bezier(0.22,1,0.36,1), opacity 520ms ease",
         }}
       >
-        <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-amber-200/70">
-          Business Management
-        </p>
-        <h1 className="mt-3 font-display text-3xl font-semibold leading-tight tracking-[-0.02em] text-white">
+        <img
+          src={bizzLogo}
+          alt="Bizz Automators"
+          className="h-11 w-auto opacity-95 drop-shadow-[0_6px_20px_rgba(0,0,0,0.55)]"
+        />
+        <h1 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-[-0.02em] text-white">
           Welcome
         </h1>
         <p className="mt-2 text-sm text-white/55">Simplify your business.</p>
