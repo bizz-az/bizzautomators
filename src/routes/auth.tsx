@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, X, LogIn, UserPlus } from "lucide-react";
 import welcomeBg from "@/assets/welcome-sunset.jpg";
+import bizzLogo from "@/assets/bizz-logo.png";
 import { WelcomeScreen, WELCOME_SEEN_KEY } from "@/components/auth/welcome-screen";
 
 import { BusinessProfileStep } from "@/components/auth/signup-scope-steps";
