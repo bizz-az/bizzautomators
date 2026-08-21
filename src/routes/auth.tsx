@@ -181,18 +181,21 @@ function AuthPage() {
             },
           },
         });
-        if (error) throw error;
-        toast.success("Akaunti imetengenezwa. Unaweza kuingia sasa.");
-        setMode("signin");
+        if (error) {
+          celebratingRef.current = false;
+          throw error;
+        }
+        hasSessionRef.current = Boolean(data.session);
+        setMode(null);
         setSignupStep(1);
+        setCelebrate(true);
       } else {
-        if (!isValidPhone(phone)) throw new Error("Weka namba sahihi ya simu");
+        if (!isValidPhone(phone)) throw new Error("Enter a valid phone number");
         const { error } = await supabase.auth.signInWithPassword({
           email: phoneIdentity(phone),
           password,
         });
         if (error) throw error;
-        toast.success("Karibu tena");
       }
     } catch (err: any) {
       toast.error(err?.message ?? "Something went wrong");
