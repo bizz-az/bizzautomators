@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import welcomeBg from "@/assets/welcome-sunset.jpg";
+import bizzLogo from "@/assets/bizz-logo.png";
 
 export const WELCOME_SEEN_KEY = "bizz.welcome.seen";
 
@@ -109,10 +110,12 @@ export function WelcomeScreen({ onComplete }: { onComplete: () => void }) {
             transition: dragging ? "none" : "transform 520ms cubic-bezier(0.22,1,0.36,1)",
           }}
         >
-          <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-amber-200/70">
-            Business Management
-          </p>
-          <h1 className="mt-4 font-display text-[2.6rem] font-semibold leading-[1.05] tracking-[-0.02em] text-white">
+          <img
+            src={bizzLogo}
+            alt="Bizz Automators"
+            className="h-12 w-auto opacity-95 drop-shadow-[0_6px_20px_rgba(0,0,0,0.55)]"
+          />
+          <h1 className="mt-5 font-display text-[2.6rem] font-semibold leading-[1.05] tracking-[-0.02em] text-white">
             Simplify your
             <br />
             business.
