@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, X, LogIn, UserPlus } from "lucide-react";
@@ -115,6 +115,9 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
   const [revealed, setRevealed] = useState(true);
+  const [celebrate, setCelebrate] = useState(false);
+  const celebratingRef = useRef(false);
+  const hasSessionRef = useRef(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -129,7 +132,7 @@ function AuthPage() {
       }
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) navigate({ to: "/dashboard", replace: true });
+      if (session && !celebratingRef.current) navigate({ to: "/dashboard", replace: true });
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
@@ -139,7 +142,7 @@ function AuthPage() {
     e.preventDefault();
     if (mode === "signup" && signupStep < 2) {
       if (signupStep === 1 && (!fullName.trim() || !isValidPhone(phone) || password.length < 6)) {
-        toast.error("Weka jina lako, namba sahihi ya simu, na nenosiri lenye herufi 6 au zaidi");
+        toast.error("Enter your name, a valid phone number, and a password of at least 6 characters");
         return;
       }
       if (
@@ -161,7 +164,8 @@ function AuthPage() {
     try {
       if (mode === "signup") {
         savePendingScope({ phone: normalizePhone(phone), characteristics, plan: "full" });
-        const { error } = await supabase.auth.signUp({
+        celebratingRef.current = true;
+        const { data, error } = await supabase.auth.signUp({
           email: phoneIdentity(phone),
           password,
           options: {
@@ -179,18 +183,21 @@ function AuthPage() {
             },
           },
         });
-        if (error) throw error;
-        toast.success("Akaunti imetengenezwa. Unaweza kuingia sasa.");
-        setMode("signin");
+        if (error) {
+          celebratingRef.current = false;
+          throw error;
+        }
+        hasSessionRef.current = Boolean(data.session);
+        setMode(null);
         setSignupStep(1);
+        setCelebrate(true);
       } else {
-        if (!isValidPhone(phone)) throw new Error("Weka namba sahihi ya simu");
+        if (!isValidPhone(phone)) throw new Error("Enter a valid phone number");
         const { error } = await supabase.auth.signInWithPassword({
           email: phoneIdentity(phone),
           password,
         });
         if (error) throw error;
-        toast.success("Karibu tena");
       }
     } catch (err: any) {
       toast.error(err?.message ?? "Something went wrong");
@@ -225,7 +232,7 @@ function AuthPage() {
               type="tel"
               inputMode="tel"
               required
-              placeholder="Namba ya simu (07XX XXX XXX)"
+              placeholder="Phone number (07XX XXX XXX)"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
@@ -234,7 +241,7 @@ function AuthPage() {
               type="password"
               required
               minLength={6}
-              placeholder="Nenosiri"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -253,7 +260,7 @@ function AuthPage() {
               type="tel"
               inputMode="tel"
               required
-              placeholder="Namba ya simu"
+              placeholder="Phone number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
@@ -262,7 +269,7 @@ function AuthPage() {
               type="password"
               required
               minLength={6}
-              placeholder="Nenosiri"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -397,6 +404,28 @@ function AuthPage() {
             window.localStorage.setItem(WELCOME_SEEN_KEY, "1");
             setShowWelcome(false);
             setRevealed(true);
+          }}
+        />
+      )}
+
+      {celebrate && (
+        <Celebration
+          title="Congratulations!"
+          message={
+            hasSessionRef.current
+              ? "Your business account is ready. Let's get started."
+              : "Your business account has been created. Sign in to continue."
+          }
+          actionLabel={hasSessionRef.current ? "Go to dashboard" : "Sign in"}
+          onDone={() => {
+            celebratingRef.current = false;
+            setCelebrate(false);
+            if (hasSessionRef.current) {
+              navigate({ to: "/dashboard", replace: true });
+            } else {
+              setPassword("");
+              setMode("signin");
+            }
           }}
         />
       )}
