@@ -310,32 +310,69 @@ function AuthPage() {
   );
 
   return (
-    <main className="relative grid min-h-screen place-items-center px-5 py-12 text-white">
+    <main className="relative grid min-h-screen place-items-end justify-center px-5 text-white sm:place-items-center">
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${desertSunsetBg})`, filter: "brightness(0.5) saturate(0.9)" }}
+        style={{ backgroundImage: `url(${welcomeBg})`, transform: "scale(1.05)" }}
       />
-      <div className="relative w-full max-w-sm rounded-3xl border border-white/20 bg-black/40 p-6 text-center backdrop-blur-xl">
-        <h1 className="font-display text-2xl font-medium tracking-[0.12em] text-white/90">BIZZ AUTOMATORS</h1>
-        <p className="mt-1 text-sm text-white/70">Simplify your business.</p>
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(18,12,8,0.45) 0%, rgba(16,10,6,0.66) 55%, rgba(12,8,5,0.94) 100%)",
+        }}
+      />
 
-        <div className="mt-8 space-y-3">
-          <button
-            onClick={() => setMode("signin")}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-4 py-3 text-sm font-semibold text-black transition hover:bg-amber-400"
-          >
-            <LogIn className="h-4 w-4" />
-            Sign in
-          </button>
+      <div
+        className="relative w-full max-w-[430px]"
+        style={{
+          paddingBottom: "calc(2.25rem + env(safe-area-inset-bottom))",
+          paddingTop: "2rem",
+          transform: revealed ? "translate3d(0,0,0)" : "translate3d(0, 24px, 0)",
+          opacity: revealed ? 1 : 0,
+          transition: "transform 620ms cubic-bezier(0.22,1,0.36,1), opacity 520ms ease",
+        }}
+      >
+        <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-amber-200/70">
+          Business Management
+        </p>
+        <h1 className="mt-3 font-display text-3xl font-semibold leading-tight tracking-[-0.02em] text-white">
+          Welcome
+        </h1>
+        <p className="mt-2 text-sm text-white/55">Simplify your business.</p>
+
+        <div className="mt-7 space-y-3">
           <button
             onClick={() => setMode("signup")}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-semibold transition hover:bg-white/20"
+            className="flex w-full items-center gap-3 rounded-2xl border border-amber-200/25 bg-[rgba(46,29,16,0.55)] p-4 text-left backdrop-blur-xl transition hover:border-amber-200/45 hover:bg-[rgba(58,36,19,0.6)]"
           >
-            <UserPlus className="h-4 w-4" />
-            Create account
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-b from-amber-300 to-amber-500 text-[#1a1005]">
+              <UserPlus className="h-5 w-5" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-semibold">Sign up</span>
+              <span className="block text-xs text-white/50">Create your account</span>
+            </span>
+          </button>
+          <button
+            onClick={() => setMode("signin")}
+            className="flex w-full items-center gap-3 rounded-2xl border border-white/12 bg-[rgba(24,16,11,0.5)] p-4 text-left backdrop-blur-xl transition hover:border-white/25 hover:bg-[rgba(32,21,14,0.6)]"
+          >
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-white/15 bg-white/[0.07] text-amber-200">
+              <LogIn className="h-5 w-5" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-semibold">Sign in</span>
+              <span className="block text-xs text-white/50">Welcome back</span>
+            </span>
           </button>
         </div>
+
+        <p className="mt-7 text-center text-[11px] uppercase tracking-[0.28em] text-white/30">
+          Bizz Automators
+        </p>
       </div>
 
       <AuthDrawer
@@ -347,6 +384,17 @@ function AuthPage() {
       >
         {form}
       </AuthDrawer>
+
+      {showWelcome && (
+        <WelcomeScreen
+          onComplete={() => {
+            window.localStorage.setItem(WELCOME_SEEN_KEY, "1");
+            setShowWelcome(false);
+            setRevealed(true);
+          }}
+        />
+      )}
     </main>
   );
+
 }
